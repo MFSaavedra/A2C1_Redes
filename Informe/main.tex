@@ -1,0 +1,166 @@
+% Template:     Informe LaTeX
+% Documento:    Archivo principal
+% Versión:      8.4.4 (02/12/2025)
+% Codificación: UTF-8
+%
+% Autor: Pablo Pizarro R.
+%        pablo@ppizarror.com
+%
+% Manual template: [https://latex.ppizarror.com/informe]
+% Licencia MIT:    [https://opensource.org/licenses/MIT]
+
+% CREACIÓN DEL DOCUMENTO
+\documentclass[
+	spanish, % Idioma: spanish, english, etc.
+	letterpaper, oneside
+]{article}
+
+% INFORMACIÓN DEL DOCUMENTO
+\def\documenttitle {Actividad 2}
+\def\documentsubtitle {Construyamos un resolver}
+\def\documentsubject {DNS}
+
+\def\documentauthor {María Moya G., M. Fernando Saavedra}
+\def\coursename {Redes}
+\def\coursecode {CC4303}
+
+\def\universityname {Universidad de Chile}
+\def\universityfaculty {Facultad de Ciencias Físicas y Matemáticas}
+\def\universitydepartment {Departamento de Ciencias de la Computación}
+\def\universitydepartmentimage {departamentos/dcc}
+\def\universitydepartmentimagecfg {height=1.57cm}
+\def\universitylocation {Santiago de Chile}
+
+% INTEGRANTES, PROFESORES Y FECHAS
+\def\authortable {
+	\begin{tabular}{ll}
+		Integrantes:
+		& \begin{tabular}[t]{l}
+			María Moya G. \\
+			M. Fernando Saavedra
+		\end{tabular} \\
+		Profesor:
+		& \begin{tabular}[t]{l}
+			Ivana Bachmann
+		\end{tabular} \\
+		Auxiliar:
+		& \begin{tabular}[t]{l}
+			Julián Ferreira
+		\end{tabular} \\
+		Ayudantes:
+		& \begin{tabular}[t]{l}
+			Diego García G. \\
+			Valeria Serrano
+		\end{tabular} \\
+		& \\
+		\multicolumn{2}{l}{Fecha de realización: \today} \\
+		% TODO: confirmar la fecha de entrega de la actividad 2
+		\multicolumn{2}{l}{Fecha de entrega: \today} \\
+		\multicolumn{2}{l}{\universitylocation}
+	\end{tabular}
+}
+
+% IMPORTACIÓN DEL TEMPLATE
+\input{template}
+
+% CONVENCIÓN TIPOGRÁFICA
+% Monoespaciado SOLO para lo que existe literalmente en el código, en la línea de
+% comandos o en el flujo de bytes: nombres de archivo, funciones, comandos y
+% direcciones IP. El vocabulario del protocolo ---tipos de registro, secciones
+% del mensaje y campos del encabezado--- va en texto normal, porque su forma en
+% mayúsculas ya los distingue. Cambiar una sola definición reetiqueta todo el
+% informe.
+\newcommand{\code}[1]{\texttt{#1}}    % identificadores, funciones, archivos, comandos, IPs
+\newcommand{\rr}[1]{#1}               % tipos de registro DNS (A, NS, CNAME, SOA)
+\newcommand{\msgsec}[1]{#1}           % secciones del mensaje DNS (Question, Answer, Authority, Additional)
+\newcommand{\field}[1]{#1}            % campos y flags del encabezado (ID, QR, RD, QDCOUNT, ANCOUNT)
+
+% INICIO DE PÁGINAS
+\begin{document}
+
+% PORTADA
+\templatePortrait
+
+% CONFIGURACIÓN DE PÁGINA Y ENCABEZADOS
+\templatePagecfg
+
+% RESUMEN O ABSTRACT
+%\begin{abstractd}
+%	\lipsum[1] % Párrafo ejemplo, se puede borrar
+%\end{abstractd}
+
+% TABLA DE CONTENIDOS - ÍNDICE
+\templateIndex
+
+% CONFIGURACIONES FINALES
+\templateFinalcfg
+
+% ======================= INICIO DEL DOCUMENTO =======================
+
+\section{Consultas preliminares}
+% TODO: ¿Qué IP entrega dig al preguntarle a 1.1.1.1 en el puerto 53 por
+%       example.com? ¿Cómo se compara con la IP obtenida en la sección anterior
+%       "Programando DNS con sockets"?
+
+\section{Diseño del resolver}
+
+\subsection{Socket y recepción de mensajes}
+% TODO: ¿Qué tipo de socket debe usarse y por qué? (paso 1 del enunciado)
+%       Enlace a (IP_VM, 8000), tamaño de buffer, loop de recepción.
+
+\subsection{Parseo de mensajes DNS}
+% TODO: Estructura de datos elegida y qué se guarda en ella (paso 2):
+%       Qname, ANCOUNT, NSCOUNT, ARCOUNT, secciones Answer, Authority, Additional.
+
+\subsection{Resolución iterativa: \code{resolver()}}
+% TODO: Procedimiento del paso 3 (a-d): consulta al servidor raíz, respuesta con
+%       registro A, delegación vía NS + glue en Additional, recursión sobre el
+%       nombre del Name Server cuando no hay glue.
+
+\subsection{Modo debug}
+% TODO: Formato de las líneas de debug (paso 4): dominio consultado, nombre del
+%       Name Server e IP a la que se pregunta; además, aviso de uso del caché.
+
+\subsection{Caché}
+% TODO: Los 3 dominios más repetidos dentro de las últimas 20 consultas (paso 5).
+%       Estructura de datos elegida y cuándo se consulta el caché.
+
+\section{Pruebas de funcionalidad}
+
+\subsection{\code{eol.uchile.cl}}
+% TODO: Responde con una IP de la forma 146.83.63.X. ¿Cuántas respuestas encuentra?
+
+\subsection{Uso del caché}
+% TODO: La segunda consulta a eol.uchile.cl entrega la misma dirección IP
+%       (¿cuál?), pero respondida desde el caché.
+
+\subsection{\code{www.uchile.cl}}
+% TODO: Debe resolver a 200.89.76.36.
+
+\subsection{\code{cc4303.bachmann.cl}}
+% TODO: Debe resolver a 104.248.65.245.
+
+\section{Experimentos}
+
+\subsection{\code{www.webofscience.com}}
+% TODO: ¿Resuelve el programa este dominio? ¿Qué sucede? ¿Por qué?
+%       ¿Cómo arreglaría este problema?
+
+\subsection{\code{www.cc4303.bachmann.cl}}
+% TODO: ¿Qué ocurre? ¿Qué habría esperado que ocurriera? Contrastar con
+%       dig @1.1.1.1 www.cc4303.bachmann.cl y explicar la diferencia.
+
+\subsection{Estabilidad de los Name Servers consultados}
+% TODO: Varias consultas al mismo dominio observando el modo debug.
+%       ¿Son siempre los mismos Name Servers? ¿Por qué?
+
+\section{Ejecución y repositorio}
+% TODO: Cómo ejecutar resolver.py, IP y puerto usados en las pruebas, y enlace
+%       al repositorio.
+
+\section{Declaración de uso de IA}
+% TODO: Declarar modelo(s) y en qué se usaron. Sin esta sección el informe
+%       pierde todo su puntaje.
+
+% FIN DEL DOCUMENTO
+\end{document}
