@@ -4,8 +4,8 @@ import utils
 
 listen_address = ("0.0.0.0", 8000)
 listen_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 listen_socket.bind(listen_address)
+print(f"Servidor escuchando en {listen_address[0]}:{listen_address[1]}")
 
 try:
     while True:
