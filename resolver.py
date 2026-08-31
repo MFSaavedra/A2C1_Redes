@@ -1,5 +1,5 @@
 import socket
-from dnslib import DNSRecord, QTYPE
+from dnslib import DNSRecord, QTYPE, RR, A 
 from utils import parse_dns_message, send_udp_message, update_cache, cache
 
 ROOT_IP = "198.41.0.4"
@@ -73,9 +73,12 @@ if __name__ == "__main__":
                 print(f"  {key}: {value}")
 
             if qname and qname in cache:
+                ip = cache[qname]
                 if DEBUG:
-                    print(f"(debug) [CACHE HIT] Respuesta entregada desde caché para '{qname}'")
-                response = cache[qname]
+                    print(f"(debug) [CACHE HIT] Respuesta entregada desde caché para '{qname}', de IP '{ip}'")
+                dns_query = DNSRecord.parse(data)
+                dns_query.add_answer(RR(qname, QTYPE.A, rdata=A(ip)))
+                response = dns_query.pack()
                 update_cache(qname, response)
             else:
                 if DEBUG and qname:

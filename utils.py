@@ -1,6 +1,6 @@
 import socket
 from collections import Counter
-from dnslib import DNSRecord
+from dnslib import QTYPE, DNSRecord
 
 historial_consultas = []
 cache = {}
@@ -51,8 +51,15 @@ def update_cache(qname: str, response: bytes):
         
     top_3 = {dom for dom, _ in Counter(historial_consultas).most_common(3)}
 
-    if qname in top_3:
-        cache[qname] = response
+    dns_response = DNSRecord.parse(response)
+    ip = None
+    for rr in dns_response.rr:
+        if rr.rtype == QTYPE.A:
+            ip = str(rr.rdata)
+            break
+
+    if qname in top_3 and ip:
+        cache[qname] = ip
 
     for k in list(cache.keys()):
         if k not in top_3:
