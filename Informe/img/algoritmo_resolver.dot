@@ -1,0 +1,65 @@
+// Algoritmo del resolver -- pasos (a) a (d) del punto 3 de instrucciones_A2C1.md
+digraph resolver {
+    rankdir = TB;
+    bgcolor = "white";
+    graph [fontname = "Helvetica", nodesep = 0.45, ranksep = 0.40];
+    node  [fontname = "Helvetica", fontsize = 10, style = filled, color = "#555555"];
+    edge  [fontname = "Helvetica", fontsize = 9, color = "#555555"];
+
+    // ---------- Entrada ----------
+    inicio [shape = oval, fillcolor = "#e8e8e8",
+            label = "resolver(mensaje_consulta,\nip_addr = 198.41.0.4)"];
+
+    enviar [shape = box, fillcolor = "#dae8fc",
+            label = "(a) Enviar la query a ip_addr (UDP, puerto 53)\ny esperar la respuesta"];
+
+    // ---------- Decisiones ----------
+    hay_a [shape = diamond, fillcolor = "#fff2cc", height = 0.85,
+           label = "(b) ¿Hay algún registro A\nen la sección Answer?"];
+
+    hay_ns [shape = diamond, fillcolor = "#fff2cc", height = 0.85,
+            label = "(c) ¿Hay registros NS\nen la sección Authority?"];
+
+    hay_glue [shape = diamond, fillcolor = "#fff2cc", height = 0.95,
+              label = "¿Hay algún registro A (glue)\nen la sección Additional?"];
+
+    // ---------- Salidas ----------
+    ret_ok [shape = oval, fillcolor = "#d9ead3",
+            label = "return respuesta\n(mensaje DNS completo, en bytes)"];
+
+    ret_nada [shape = oval, fillcolor = "#f4cccc",
+              label = "(d) Ignorar: return b\"\"\nel programa principal no responde"];
+
+    // ---------- Ramas (c.i) y (c.ii) ----------
+    ci [shape = box, fillcolor = "#dae8fc",
+        label = "(c.i) Tomar la primera IP\nde la sección Additional"];
+
+    cii_1 [shape = box, fillcolor = "#dae8fc",
+           label = "(c.ii) Tomar el nombre de un\nName Server de la sección Authority"];
+
+    cii_2 [shape = box, fillcolor = "#e1d5e7",
+           label = "Resolver ese nombre recursivamente\ndesde la raíz:\nresolver(question(ns), 198.41.0.4)"];
+
+    reenviar [shape = box, fillcolor = "#cce5ff", color = "#3366cc",
+              label = "Reenviar la MISMA query a la nueva IP\n(ip_addr ← IP del nuevo Name Server)"];
+
+    // ---------- Flujo ----------
+    inicio   -> enviar;
+    enviar   -> hay_a;
+    hay_a    -> ret_ok    [label = "  sí"];
+    hay_a    -> hay_ns    [label = "  no"];
+    hay_ns   -> ret_nada  [label = "  no"];
+    hay_ns   -> hay_glue  [label = "  sí (delegación)"];
+    hay_glue -> ci        [label = "  sí"];
+    hay_glue -> cii_1     [label = "  no"];
+    ci       -> reenviar;
+    cii_1    -> cii_2;
+    cii_2    -> reenviar;
+    reenviar -> enviar    [color = "#3366cc", fontcolor = "#3366cc",
+                           label = "  volver al paso (b)  "];
+
+    // ---------- Alineaciones ----------
+    { rank = same; hay_a;  ret_ok;   }
+    { rank = same; hay_ns; ret_nada; }
+    { rank = same; ci;     cii_1;    }
+}
