@@ -3,11 +3,21 @@ from dnslib import DNSRecord, QTYPE
 from utils import parse_dns_message, send_udp_message
 
 ROOT_IP = "198.41.0.4"
+DEBUG = True  # modo debug del paso 4: muestra cada consulta interna
 
-def resolver(mensaje_consulta: bytes, ip_addr=ROOT_IP) -> bytes:
+def _sin_punto_final(nombre: str) -> str:
+    """'www.uchile.cl.' -> 'www.uchile.cl'. La raiz '.' se deja intacta."""
+    return nombre if nombre == "." else nombre.rstrip(".")
+
+def resolver(mensaje_consulta: bytes, ip_addr=ROOT_IP, ns_name=".") -> bytes:
     """
     Resolver function that sends a DNS query to the specified IP address and handles the response.
     """
+    if DEBUG:
+        qname = parse_dns_message(mensaje_consulta).get("Qname", "?")
+        print(f"(debug) Consultando '{qname}' a '{_sin_punto_final(ns_name)}' "
+              f"con dirección IP '{ip_addr}'")
+
     response = send_udp_message(mensaje_consulta, ip_addr)
     if not response:
         return b""
@@ -24,12 +34,15 @@ def resolver(mensaje_consulta: bytes, ip_addr=ROOT_IP) -> bytes:
         for rr in dns_response.ar:
             if rr.rtype == QTYPE.A:
                 ip_next = str(rr.rdata)
-                return resolver(mensaje_consulta, ip_addr=ip_next)
+                return resolver(mensaje_consulta, ip_addr=ip_next, ns_name=str(rr.rname))
 
         for rr in dns_response.auth:
             if rr.rtype == QTYPE.NS:
                 ns_domain = str(rr.rdata)
                 ns_query = DNSRecord.question(ns_domain).pack()
+                if DEBUG:
+                    print(f"(debug) Sin glue en Additional; resolviendo primero "
+                          f"la IP de '{_sin_punto_final(ns_domain)}'")
                 ns_ip_bytes = resolver(ns_query, ROOT_IP)
                 
                 if ns_ip_bytes:
@@ -37,7 +50,7 @@ def resolver(mensaje_consulta: bytes, ip_addr=ROOT_IP) -> bytes:
                     for ns_rr in ns_dns_ans.rr:
                         if ns_rr.rtype == QTYPE.A:
                             ip_next = str(ns_rr.rdata)
-                            return resolver(mensaje_consulta, ip_addr=ip_next)
+                            return resolver(mensaje_consulta, ip_addr=ip_next, ns_name=ns_domain)
 
     return b""
 
