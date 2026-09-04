@@ -1,6 +1,6 @@
 import socket
-from dnslib import DNSRecord, QTYPE
-from utils import parse_dns_message, send_udp_message
+from dnslib import DNSRecord, QTYPE, RR, A 
+from utils import parse_dns_message, send_udp_message, update_cache, cache
 
 ROOT_IP = "198.41.0.4"
 DEBUG = True  # modo debug del paso 4: muestra cada consulta interna
@@ -63,10 +63,31 @@ if __name__ == "__main__":
     try:
         while True:
             data, addr = listen_socket.recvfrom(4096)
-            print(f"Mensaje recibido desde {addr}:")
+            print(f"\nMensaje recibido desde {addr}:")
             print(data)
 
-            response = resolver(data)
+            parsed_data = parse_dns_message(data)
+            qname = parsed_data.get("Qname", "")
+            print("Estructura del mensaje DNS:")
+            for key, value in parsed_data.items():
+                print(f"  {key}: {value}")
+
+            if qname and qname in cache:
+                ip = cache[qname]
+                if DEBUG:
+                    print(f"(debug) [CACHE HIT] Respuesta entregada desde caché para '{qname}', de IP '{ip}'")
+                dns_query = DNSRecord.parse(data)
+                dns_query.add_answer(RR(qname, QTYPE.A, rdata=A(ip)))
+                response = dns_query.pack()
+                update_cache(qname, response)
+            else:
+                if DEBUG and qname:
+                    print(f"(debug) [CACHE MISS] '{qname}' no está en caché. Resolviendo...")
+                
+                response = resolver(data)
+                if response and qname:
+                    update_cache(qname, response)
+
             if not response:
                 print("No se pudo obtener una respuesta del resolver.")
                 continue
@@ -74,11 +95,6 @@ if __name__ == "__main__":
             listen_socket.sendto(response, addr)
             print(f"Respuesta enviada a {addr}:")
             print(response)
-
-            parsed_data = parse_dns_message(data)
-            print("Estructura del mensaje DNS:")
-            for key, value in parsed_data.items():
-                print(f"{key}: {value}")
 
     except KeyboardInterrupt:
         print("\nServidor detenido.")

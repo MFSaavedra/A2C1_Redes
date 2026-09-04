@@ -1,0 +1,168 @@
+Experimento 3: cinco resoluciones de www.uchile.cl
+==================================================
+Resolver corriendo en la VM (IP_VM = 192.168.2.5, puerto 8000);
+dig ejecutado desde el anfitrion 192.168.2.4.  Fecha: 2026-09-02
+
+El resolver se reinicio antes de cada ronda para que el cache no interfiriera.
+
+----- dig (cliente) -----
+
+% dig -p8000 @192.168.2.5 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18121
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: f72f17aca5345dcd010000006a98e82099e975e5ba143fb6 (good)
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 156 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:23:12 -04 2026
+;; MSG SIZE  rcvd: 86
+
+
+----- ronda 2 (resolver reiniciado, cache vacio) -----
+
+% dig -p8000 @192.168.2.5 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33777
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: fe252fab99676bbf010000006a98e82025ff20f24f176fec (good)
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 192 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:23:12 -04 2026
+;; MSG SIZE  rcvd: 86
+
+
+----- ronda 3 (resolver reiniciado, cache vacio) -----
+
+% dig -p8000 @192.168.2.5 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37753
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: 05726118e8c7fccf010000006a98e8216e207f8721063316 (good)
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 210 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:23:13 -04 2026
+;; MSG SIZE  rcvd: 86
+
+
+----- ronda 4 (resolver reiniciado, cache vacio) -----
+
+% dig -p8000 @192.168.2.5 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37251
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: 7128c44ac9122ce1010000006a98e822cefd906d3f6fd23c (good)
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 185 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:23:14 -04 2026
+;; MSG SIZE  rcvd: 86
+
+
+----- ronda 5 (resolver reiniciado, cache vacio) -----
+
+% dig -p8000 @192.168.2.5 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 58470
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: 419de83ff3276b8b010000006a98e822fc18208553e36d3d (good)
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 144 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:23:14 -04 2026
+;; MSG SIZE  rcvd: 86
+
+----- resolver (modo debug, en la VM) -----
+
+----- ronda 1 -----
+(debug) [CACHE MISS] 'www.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'www.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
+----- ronda 2 -----
+(debug) [CACHE MISS] 'www.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'www.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
+----- ronda 3 -----
+(debug) [CACHE MISS] 'www.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'www.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
+----- ronda 4 -----
+(debug) [CACHE MISS] 'www.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'www.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
+----- ronda 5 -----
+(debug) [CACHE MISS] 'www.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'www.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
