@@ -1,0 +1,55 @@
+Experimento 2: www.cc4303.bachmann.cl
+=====================================
+Resolver corriendo en la VM (IP_VM = 192.168.2.5, puerto 8000);
+dig ejecutado desde el anfitrion 192.168.2.4.  Fecha: 2026-09-02
+
+Se incluye la consulta a 1.1.1.1 para comparar.
+
+----- dig (cliente) -----
+
+% dig -p8000 @192.168.2.5 www.cc4303.bachmann.cl
+;; communications error to 192.168.2.5#8000: timed out
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.cc4303.bachmann.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; no servers could be reached
+
+% dig @1.1.1.1 www.cc4303.bachmann.cl
+
+; <<>> DiG 9.20.27 <<>> @1.1.1.1 www.cc4303.bachmann.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 4873
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;www.cc4303.bachmann.cl.		IN	A
+
+;; AUTHORITY SECTION:
+bachmann.cl.		1800	IN	SOA	ns1.digitalocean.com. hostmaster.bachmann.cl. 0 10800 3600 604800 1800
+
+;; Query time: 509 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1) (UDP)
+;; WHEN: Wed Sep 02 23:22:02 -04 2026
+;; MSG SIZE  rcvd: 118
+
+----- resolver (modo debug, en la VM) -----
+
+Resolver escuchando en 0.0.0.0:8000
+
+Mensaje recibido desde ('192.168.2.4', 38112):
+   [... mensaje en bytes, omitido ...]
+   [... estructura parseada, omitida ...]
+(debug) [CACHE MISS] 'www.cc4303.bachmann.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.cc4303.bachmann.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.cc4303.bachmann.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Sin glue en Additional; resolviendo primero la IP de 'ns1.digitalocean.com'
+(debug) Consultando 'ns1.digitalocean.com' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'ns1.digitalocean.com' a 'l.gtld-servers.net' con dirección IP '192.41.162.30'
+(debug) Consultando 'ns1.digitalocean.com' a 'kim.ns.cloudflare.com' con dirección IP '108.162.192.126'
+(debug) Consultando 'www.cc4303.bachmann.cl' a 'ns1.digitalocean.com' con dirección IP '172.64.52.210'
+No se pudo obtener una respuesta del resolver.

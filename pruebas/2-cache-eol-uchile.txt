@@ -1,0 +1,42 @@
+Prueba de funcionalidad 2: eol.uchile.cl responde desde el cache
+================================================================
+Resolver corriendo en la VM (IP_VM = 192.168.2.5, puerto 8000);
+dig ejecutado desde el anfitrion 192.168.2.4.  Fecha: 2026-09-02
+
+Segunda consulta de la misma ejecucion del resolver que la prueba 1.
+
+----- dig (cliente) -----
+
+% dig -p8000 @192.168.2.5 eol.uchile.cl
+;; Warning: query response not set
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 eol.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 55487
+;; flags: rd ad; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 971158e5ea6c06cd (echoed)
+;; QUESTION SECTION:
+;eol.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+eol.uchile.cl.		0	IN	A	146.83.63.77
+
+;; Query time: 0 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:21:21 -04 2026
+;; MSG SIZE  rcvd: 70
+
+----- resolver (modo debug, en la VM) -----
+
+Mensaje recibido desde ('192.168.2.4', 53755):
+   [... mensaje en bytes, omitido ...]
+   [... estructura parseada, omitida ...]
+(debug) [CACHE HIT] Respuesta entregada desde caché para 'eol.uchile.cl', de IP '146.83.63.77'
+Respuesta enviada a ('192.168.2.4', 53755):
+   [... mensaje en bytes, omitido ...]

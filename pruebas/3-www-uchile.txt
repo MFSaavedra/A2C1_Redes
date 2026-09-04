@@ -1,0 +1,68 @@
+Prueba de funcionalidad 3: www.uchile.cl
+========================================
+Resolver corriendo en la VM (IP_VM = 192.168.2.5, puerto 8000);
+dig ejecutado desde el anfitrion 192.168.2.4.  Fecha: 2026-09-02
+
+Se incluye la consulta a 1.1.1.1 para comparar.
+
+----- dig (cliente) -----
+
+% dig @1.1.1.1 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> @1.1.1.1 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57730
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 8 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1) (UDP)
+;; WHEN: Wed Sep 02 23:20:58 -04 2026
+;; MSG SIZE  rcvd: 58
+
+% dig -p8000 @192.168.2.5 www.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31391
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: 8d93dba3cf6eb540010000006a98e79ab97e99fcb3495244 (good)
+;; QUESTION SECTION:
+;www.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+www.uchile.cl.		300	IN	A	200.89.76.36
+
+;; Query time: 162 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:20:58 -04 2026
+;; MSG SIZE  rcvd: 86
+
+----- resolver (modo debug, en la VM) -----
+
+Resolver escuchando en 0.0.0.0:8000
+
+Mensaje recibido desde ('192.168.2.4', 44008):
+   [... mensaje en bytes, omitido ...]
+   [... estructura parseada, omitida ...]
+(debug) [CACHE MISS] 'www.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'www.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'www.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
+Respuesta enviada a ('192.168.2.4', 44008):
+   [... mensaje en bytes, omitido ...]

@@ -1,0 +1,53 @@
+Prueba de funcionalidad 1: eol.uchile.cl
+========================================
+Resolver corriendo en la VM (IP_VM = 192.168.2.5, puerto 8000);
+dig ejecutado desde el anfitrion 192.168.2.4.  Fecha: 2026-09-02
+
+----- dig (cliente) -----
+
+% dig -p8000 @192.168.2.5 eol.uchile.cl
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 eol.uchile.cl +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45981
+;; flags: qr aa rd; QUERY: 1, ANSWER: 12, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; COOKIE: b8f5df01d46b388d010000006a98e7b13a834bb8e622adf9 (good)
+;; QUESTION SECTION:
+;eol.uchile.cl.			IN	A
+
+;; ANSWER SECTION:
+eol.uchile.cl.		3600	IN	CNAME	oeol-c.uchile.cl.
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.77
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.40
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.65
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.64
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.71
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.74
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.68
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.72
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.69
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.73
+oeol-c.uchile.cl.	3600	IN	A	146.83.63.31
+
+;; Query time: 185 msec
+;; SERVER: 192.168.2.5#8000(192.168.2.5) (UDP)
+;; WHEN: Wed Sep 02 23:21:21 -04 2026
+;; MSG SIZE  rcvd: 267
+
+----- resolver (modo debug, en la VM) -----
+
+Mensaje recibido desde ('192.168.2.4', 34866):
+   [... mensaje en bytes, omitido ...]
+   [... estructura parseada, omitida ...]
+(debug) [CACHE MISS] 'eol.uchile.cl' no está en caché. Resolviendo...
+(debug) Consultando 'eol.uchile.cl' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'eol.uchile.cl' a 'cl2-tld.d-zone.ca' con dirección IP '185.159.198.56'
+(debug) Consultando 'eol.uchile.cl' a 'ns1.uchile.cl' con dirección IP '200.89.70.3'
+Respuesta enviada a ('192.168.2.4', 34866):
+   [... mensaje en bytes, omitido ...]

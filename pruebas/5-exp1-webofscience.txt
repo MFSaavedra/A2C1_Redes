@@ -1,0 +1,53 @@
+Experimento 1: www.webofscience.com
+===================================
+Resolver corriendo en la VM (IP_VM = 192.168.2.5, puerto 8000);
+dig ejecutado desde el anfitrion 192.168.2.4.  Fecha: 2026-09-02
+
+El resolver no responde: repite el mismo ciclo de delegacion hasta que dig
+corta por timeout. Se observaron 40 ciclos antes de matar el proceso.
+
+----- dig (cliente) -----
+
+% dig -p8000 @192.168.2.5 www.webofscience.com
+;; communications error to 192.168.2.5#8000: timed out
+
+; <<>> DiG 9.20.27 <<>> -p8000 @192.168.2.5 www.webofscience.com +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; no servers could be reached
+
+% dig @1.1.1.1 www.webofscience.com
+
+; <<>> DiG 9.20.27 <<>> @1.1.1.1 www.webofscience.com +timeout=20 +tries=1
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31370
+;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;www.webofscience.com.		IN	A
+
+;; ANSWER SECTION:
+www.webofscience.com.	60	IN	CNAME	www-us.webofscience.com.
+www-us.webofscience.com. 60	IN	CNAME	www-us.webofscience.com.cdn.cloudflare.net.
+www-us.webofscience.com.cdn.cloudflare.net. 300	IN A 104.18.24.24
+www-us.webofscience.com.cdn.cloudflare.net. 300	IN A 104.18.25.24
+
+;; Query time: 11 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1) (UDP)
+;; WHEN: Wed Sep 02 23:21:41 -04 2026
+;; MSG SIZE  rcvd: 158
+
+----- resolver (modo debug, en la VM) -----
+
+(debug) [CACHE MISS] 'www.webofscience.com' no está en caché. Resolviendo...
+(debug) Consultando 'www.webofscience.com' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'www.webofscience.com' a 'l.gtld-servers.net' con dirección IP '192.41.162.30'
+(debug) Consultando 'www.webofscience.com' a 'ns-342.awsdns-42.com' con dirección IP '205.251.193.86'
+(debug) Sin glue en Additional; resolviendo primero la IP de 'ns-1010.awsdns-62.net'
+(debug) Consultando 'ns-1010.awsdns-62.net' a '.' con dirección IP '198.41.0.4'
+(debug) Consultando 'ns-1010.awsdns-62.net' a 'm.gtld-servers.net' con dirección IP '192.55.83.30'
+   [... las cuatro lineas anteriores se repiten indefinidamente ...]
